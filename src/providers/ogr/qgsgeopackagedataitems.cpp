@@ -30,6 +30,7 @@
 #include "qgsrasterlayer.h"
 #include "qgsogrprovider.h"
 #include "qgsogrdataitems.h"
+#include "qgsapplication.h"
 #ifdef HAVE_GUI
 #include "qgsnewnamedialog.h"
 #include "qgsnewgeopackagelayerdialog.h"
@@ -529,7 +530,7 @@ bool QgsGeoPackageAbstractLayerItem::deleteLayer()
     QgsGeoPackageConnectionItem *connectionParentItem = qobject_cast<QgsGeoPackageConnectionItem *>( mParent );
     if ( connectionParentItem )
     {
-      if ( QMessageBox::question( nullptr, QObject::tr( "Delete Layer" ), QObject::tr( "The layer <b>%1</b> has been deleted successfully."
+      if ( QMessageBox::question( nullptr, QObject::tr( "Delete Layer" ), QObject::tr( "The layer <b>%1</b> was successfully deleted."
                                   " Compact database (VACUUM) <b>%2</b> now?" ).arg( mName, connectionParentItem->name() ), QMessageBox::Yes | QMessageBox::No, QMessageBox::No ) == QMessageBox::Yes )
       {
         connectionParentItem->vacuumGeoPackageDbAction();
@@ -537,7 +538,7 @@ bool QgsGeoPackageAbstractLayerItem::deleteLayer()
     }
     else
     {
-      QMessageBox::information( nullptr, tr( "Delete Layer" ), tr( "The layer <b>%1</b> has been deleted successfully." ).arg( mName ) );
+      QMessageBox::information( nullptr, tr( "Delete Layer" ), tr( "The layer <b>%1</b> was successfully deleted." ).arg( mName ) );
     }
     if ( mParent )
       mParent->refreshConnections();

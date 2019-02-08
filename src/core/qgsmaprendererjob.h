@@ -18,7 +18,6 @@
 
 #include "qgis_core.h"
 #include "qgis_sip.h"
-#include "qgis.h"
 #include <QFutureWatcher>
 #include <QImage>
 #include <QPainter>
@@ -55,6 +54,7 @@ struct LayerRenderJob
   bool cached; // if true, img already contains cached image from previous rendering
   QgsWeakMapLayerPointer layer;
   int renderingTime; //!< Time it took to render the layer in ms (it is -1 if not rendered or still rendering)
+  QStringList errors; //!< Rendering errors
 };
 
 typedef QList<LayerRenderJob> LayerRenderJobs;
@@ -286,8 +286,14 @@ class CORE_EXPORT QgsMapRendererJob : public QObject
      */
     void cleanupLabelJob( LabelRenderJob &job ) SIP_SKIP;
 
+    /**
+     * \note not available in Python bindings
+     * \deprecated Will be removed in QGIS 4.0
+     */
+    Q_DECL_DEPRECATED static void drawLabeling( const QgsMapSettings &settings, QgsRenderContext &renderContext, QgsLabelingEngine *labelingEngine2, QPainter *painter ) SIP_SKIP;
+
     //! \note not available in Python bindings
-    static void drawLabeling( const QgsMapSettings &settings, QgsRenderContext &renderContext, QgsLabelingEngine *labelingEngine2, QPainter *painter ) SIP_SKIP;
+    static void drawLabeling( QgsRenderContext &renderContext, QgsLabelingEngine *labelingEngine2, QPainter *painter ) SIP_SKIP;
 
   private:
 

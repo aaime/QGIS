@@ -19,7 +19,6 @@
 #define QGSSERVERPARAMETERS_H
 
 #include <QMap>
-#include <QObject>
 #include <QMetaEnum>
 #include <QUrlQuery>
 #include <QColor>
@@ -339,6 +338,7 @@ class SERVER_EXPORT QgsServerParameters
     QVariant value( QgsServerParameter::Name name ) const;
 
     QMap<QgsServerParameter::Name, QgsServerParameter> mParameters;
+    QUrlQuery mUrlQuery;
 };
 
 #endif

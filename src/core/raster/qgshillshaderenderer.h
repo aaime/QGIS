@@ -20,7 +20,7 @@
 
 
 #include "qgis_core.h"
-#include "qgis.h"
+#include "qgis_sip.h"
 #include "qgsrasterrenderer.h"
 
 class QgsRasterBlock;
@@ -61,6 +61,8 @@ class CORE_EXPORT QgsHillshadeRenderer : public QgsRasterRenderer
     QgsRasterBlock *block( int bandNo, const QgsRectangle &extent, int width, int height, QgsRasterBlockFeedback *feedback = nullptr ) override;
 
     QList<int> usesBands() const override;
+
+    void toSld( QDomDocument &doc, QDomElement &element, const QgsStringMap &props = QgsStringMap() ) const override;
 
     /**
      * Returns the band used by the renderer

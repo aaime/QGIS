@@ -24,8 +24,8 @@
 #include "qgsmodule.h"
 #include "qgswmsutils.h"
 #include "qgsmediancut.h"
-#include "qgsconfigcache.h"
 #include "qgsserverprojectutils.h"
+#include "qgswmsserviceexception.h"
 
 namespace QgsWms
 {
@@ -56,7 +56,7 @@ namespace QgsWms
         QStringLiteral( "_DC" )
       };
 
-      href = request.url();
+      href = request.originalUrl();
       QUrlQuery q( href );
 
       for ( auto param : q.queryItems() )

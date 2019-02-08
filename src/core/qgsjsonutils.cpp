@@ -25,6 +25,7 @@
 #include "qgslogger.h"
 #include "qgsfieldformatterregistry.h"
 #include "qgsfieldformatter.h"
+#include "qgsapplication.h"
 
 #include <QJsonDocument>
 #include <QJsonArray>
@@ -144,7 +145,13 @@ QString QgsJsonExporter::exportFeature( const QgsFeature &feature, const QVarian
             val = fieldFormatter->representValue( mLayer.data(), i, setup.config(), QVariant(), val );
         }
 
-        properties += QStringLiteral( "      \"%1\":%2" ).arg( fields.at( i ).name(), QgsJsonUtils::encodeValue( val ) );
+        QString name = fields.at( i ).name();
+        if ( mAttributeDisplayName )
+        {
+          name = mLayer->attributeDisplayName( i );
+        }
+
+        properties += QStringLiteral( "      \"%1\":%2" ).arg( name, QgsJsonUtils::encodeValue( val ) );
 
         ++attributeCounter;
       }

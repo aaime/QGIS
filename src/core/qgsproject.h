@@ -23,7 +23,6 @@
 
 #include "qgis_core.h"
 #include "qgis_sip.h"
-#include "qgis.h"
 #include <memory>
 #include <QHash>
 #include <QList>
@@ -47,6 +46,7 @@
 #include "qgstranslationcontext.h"
 #include "qgsprojecttranslator.h"
 #include "qgsattributeeditorelement.h"
+#include "qgscolorscheme.h"
 
 class QFileInfo;
 class QDomDocument;
@@ -702,6 +702,30 @@ class CORE_EXPORT QgsProject : public QObject, public QgsExpressionContextGenera
      */
     QgsMapLayer *mapLayer( const QString &layerId ) const;
 
+#ifndef SIP_RUN
+
+    /**
+     * Retrieve a pointer to a registered layer by \p layerId converted
+     * to type T. This is a convenience template.
+     * A nullptr will be returned if the layer is not found or
+     * if it cannot be cast to type T.
+     *
+     * \code{cpp}
+     * QgsVectorLayer *layer = project->mapLayer<QgsVectorLayer*>( layerId );
+     * \endcode
+     *
+     * \see mapLayer()
+     * \see mapLayers()
+     *
+     * \since QGIS 3.6
+     */
+    template <class T>
+    T mapLayer( const QString &layerId ) const
+    {
+      return qobject_cast<T>( mapLayer( layerId ) );
+    }
+#endif
+
     /**
      * Retrieve a list of matching registered layers by layer name.
      * \param layerName name of layers to match
@@ -978,6 +1002,14 @@ class CORE_EXPORT QgsProject : public QObject, public QgsExpressionContextGenera
     Q_DECL_DEPRECATED void setRequiredLayers( const QSet<QgsMapLayer *> &layers );
 
     /**
+     * Sets the \a colors for the project's color scheme (see QgsProjectColorScheme).
+     *
+     * \see projectColorsChanged()
+     * \since QGIS 3.6
+     */
+    void setProjectColors( const QgsNamedColorList &colors );
+
+    /**
      * Triggers the collection strings of .qgs to be included in ts file and calls writeTsFile()
      * \since QGIS 3.4
      */
@@ -1176,6 +1208,14 @@ class CORE_EXPORT QgsProject : public QObject, public QgsExpressionContextGenera
      * \since QGIS 3.2
      */
     void metadataChanged();
+
+    /**
+     * Emitted whenever the project's color scheme has been changed.
+
+     * \see setProjectColors()
+     * \since QGIS 3.6
+     */
+    void projectColorsChanged();
 
     //
     // signals from QgsMapLayerRegistry
@@ -1460,6 +1500,8 @@ class CORE_EXPORT QgsProject : public QObject, public QgsExpressionContextGenera
     QgsProjectMetadata mMetadata;
 
     std::unique_ptr< QTranslator > mTranslator;
+
+    bool mIsBeingDeleted = false;
 
     friend class QgsProjectDirtyBlocker;
 

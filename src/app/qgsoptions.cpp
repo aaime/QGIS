@@ -360,6 +360,9 @@ QgsOptions::QgsOptions( QWidget *parent, Qt::WindowFlags fl, const QList<QgsOpti
   const QStringList excludedUrlPathList = mSettings->value( QStringLiteral( "proxy/proxyExcludedUrls" ) ).toStringList();
   for ( const QString &path : excludedUrlPathList )
   {
+    if ( path.trimmed().isEmpty() )
+      continue;
+
     QListWidgetItem *newItem = new QListWidgetItem( mExcludeUrlListWidget );
     newItem->setText( path );
     newItem->setFlags( Qt::ItemIsEditable | Qt::ItemIsEnabled | Qt::ItemIsSelectable );
@@ -1385,16 +1388,15 @@ void QgsOptions::saveOptions()
   mSettings->setValue( QStringLiteral( "cache/size" ), QVariant::fromValue( mCacheSize->value() * 1024L ) );
 
   //url to exclude from proxys
-  QString proxyExcludeString;
+  QStringList excludedUrls;
+  excludedUrls.reserve( mExcludeUrlListWidget->count() );
   for ( int i = 0; i < mExcludeUrlListWidget->count(); ++i )
   {
-    if ( i != 0 )
-    {
-      proxyExcludeString += '|';
-    }
-    proxyExcludeString += mExcludeUrlListWidget->item( i )->text();
+    const QString host = mExcludeUrlListWidget->item( i )->text();
+    if ( !host.trimmed().isEmpty() )
+      excludedUrls << host;
   }
-  mSettings->setValue( QStringLiteral( "proxy/proxyExcludedUrls" ), proxyExcludeString );
+  mSettings->setValue( QStringLiteral( "proxy/proxyExcludedUrls" ), excludedUrls );
 
   QgisApp::instance()->namUpdate();
 

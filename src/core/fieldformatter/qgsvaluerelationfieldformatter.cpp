@@ -19,6 +19,7 @@
 #include "qgsproject.h"
 #include "qgsvectorlayer.h"
 #include "qgsexpressionnodeimpl.h"
+#include "qgsapplication.h"
 
 #include <QSettings>
 
@@ -112,7 +113,7 @@ QgsValueRelationFieldFormatter::ValueRelationCache QgsValueRelationFieldFormatte
 {
   ValueRelationCache cache;
 
-  QgsVectorLayer *layer = qobject_cast<QgsVectorLayer *>( QgsProject::instance()->mapLayer( config.value( QStringLiteral( "Layer" ) ).toString() ) );
+  QgsVectorLayer *layer = QgsProject::instance()->mapLayer<QgsVectorLayer *>( config.value( QStringLiteral( "Layer" ) ).toString() );
 
   if ( !layer )
     return cache;

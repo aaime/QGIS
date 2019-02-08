@@ -32,7 +32,6 @@
 %Include auto_generated/qgsdatetimestatisticalsummary.sip
 %Include auto_generated/qgsdatumtransform.sip
 %Include auto_generated/qgsdbfilterproxymodel.sip
-%Include auto_generated/qgsdefaultvalue.sip
 %Include auto_generated/qgsdiagramrenderer.sip
 %Include auto_generated/qgsdistancearea.sip
 %Include auto_generated/qgseditformconfig.sip
@@ -80,6 +79,7 @@
 %Include auto_generated/qgsmargins.sip
 %Include auto_generated/qgsmimedatautils.sip
 %Include auto_generated/qgsmultirenderchecker.sip
+%Include auto_generated/qgsnetworkreply.sip
 %Include auto_generated/qgsobjectcustomproperties.sip
 %Include auto_generated/qgsogcutils.sip
 %Include auto_generated/qgsoptional.sip
@@ -236,7 +236,9 @@
 %Include auto_generated/raster/qgssinglebandgrayrenderer.sip
 %Include auto_generated/raster/qgssinglebandpseudocolorrenderer.sip
 %Include auto_generated/raster/qgshillshaderenderer.sip
+%Include auto_generated/mesh/qgsmeshlayerinterpolator.sip
 %Include auto_generated/mesh/qgsmeshrenderersettings.sip
+%Include auto_generated/mesh/qgsmeshspatialindex.sip
 %Include auto_generated/scalebar/qgsdoubleboxscalebarrenderer.sip
 %Include auto_generated/scalebar/qgsnumericscalebarrenderer.sip
 %Include auto_generated/scalebar/qgsscalebarsettings.sip
@@ -288,6 +290,7 @@
 %Include auto_generated/geometry/qgsmultipolygon.sip
 %Include auto_generated/geometry/qgsmultisurface.sip
 %Include auto_generated/geometry/qgspolygon.sip
+%Include auto_generated/geometry/qgsquadrilateral.sip
 %Include auto_generated/geometry/qgsrectangle.sip
 %Include auto_generated/geometry/qgsreferencedgeometry.sip
 %Include auto_generated/geometry/qgsregularpolygon.sip
@@ -322,6 +325,7 @@
 %Include auto_generated/qgsdataitem.sip
 %Include auto_generated/qgsdataprovider.sip
 %Include auto_generated/qgsdatasourceuri.sip
+%Include auto_generated/qgsdefaultvalue.sip
 %Include auto_generated/qgsfeature.sip
 %Include auto_generated/qgsfeedback.sip
 %Include auto_generated/qgsfield.sip

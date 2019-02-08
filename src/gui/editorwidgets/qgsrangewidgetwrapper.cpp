@@ -21,6 +21,7 @@
 #include "qgsvectorlayer.h"
 #include "qgsdial.h"
 #include "qgsslider.h"
+#include "qgsapplication.h"
 
 
 
@@ -145,7 +146,12 @@ void QgsRangeWidgetWrapper::initWidget( QWidget *editor )
     if ( allowNull )
     {
       int stepval = step.isValid() ? step.toInt() : 1;
-      minval -= stepval;
+      int newMinval = minval - stepval;
+      // make sure there is room for a new value (i.e. signed integer does not overflow)
+      if ( newMinval < minval )
+      {
+        minval = newMinval;
+      }
       mIntSpinBox->setValue( minval );
       QgsSpinBox *intSpinBox( qobject_cast<QgsSpinBox *>( mIntSpinBox ) );
       if ( intSpinBox )

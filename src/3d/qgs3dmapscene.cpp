@@ -41,12 +41,14 @@
 #include "qgscameracontroller.h"
 #include "qgschunkedentity_p.h"
 #include "qgschunknode_p.h"
+#include "qgsmeshlayer.h"
+#include "qgsmeshlayer3drenderer.h"
+#include "qgsrulebased3drenderer.h"
 #include "qgsterrainentity_p.h"
 #include "qgsterraingenerator.h"
 #include "qgstessellatedpolygongeometry.h"
 #include "qgsvectorlayer.h"
 #include "qgsvectorlayer3drenderer.h"
-
 
 Qgs3DMapScene::Qgs3DMapScene( const Qgs3DMapSettings &map, QgsAbstract3DEngine *engine )
   : mMap( map )
@@ -86,7 +88,7 @@ Qgs3DMapScene::Qgs3DMapScene( const Qgs3DMapSettings &map, QgsAbstract3DEngine *
 
   // create terrain entity
 
-  createTerrain();
+  createTerrainDeferred();
   connect( &map, &Qgs3DMapSettings::terrainGeneratorChanged, this, &Qgs3DMapScene::createTerrain );
   connect( &map, &Qgs3DMapSettings::terrainVerticalScaleChanged, this, &Qgs3DMapScene::createTerrain );
   connect( &map, &Qgs3DMapSettings::mapTileResolutionChanged, this, &Qgs3DMapScene::createTerrain );
@@ -349,14 +351,6 @@ void Qgs3DMapScene::onFrameTriggered( float dt )
 
 void Qgs3DMapScene::createTerrain()
 {
-  if ( mTerrain )
-  {
-    mChunkEntities.removeOne( mTerrain );
-
-    mTerrain->deleteLater();
-    mTerrain = nullptr;
-  }
-
   if ( !mTerrainUpdateScheduled )
   {
     // defer re-creation of terrain: there may be multiple invocations of this slot, so create the new entity just once
@@ -368,6 +362,14 @@ void Qgs3DMapScene::createTerrain()
 
 void Qgs3DMapScene::createTerrainDeferred()
 {
+  if ( mTerrain )
+  {
+    mChunkEntities.removeOne( mTerrain );
+
+    mTerrain->deleteLater();
+    mTerrain = nullptr;
+  }
+
   double tile0width = mMap.terrainGenerator()->extent().width();
   int maxZoomLevel = Qgs3DUtils::maxZoomLevel( tile0width, mMap.mapTileResolution(), mMap.maxTerrainGroundError() );
 
@@ -537,6 +539,14 @@ void Qgs3DMapScene::addLayerEntity( QgsMapLayer *layer )
     if ( layer->type() == QgsMapLayer::VectorLayer && renderer->type() == QLatin1String( "vector" ) )
     {
       static_cast<QgsVectorLayer3DRenderer *>( renderer )->setLayer( static_cast<QgsVectorLayer *>( layer ) );
+    }
+    else if ( layer->type() == QgsMapLayer::VectorLayer && renderer->type() == QLatin1String( "rulebased" ) )
+    {
+      static_cast<QgsRuleBased3DRenderer *>( renderer )->setLayer( static_cast<QgsVectorLayer *>( layer ) );
+    }
+    else if ( layer->type() == QgsMapLayer::MeshLayer && renderer->type() == QLatin1String( "mesh" ) )
+    {
+      static_cast<QgsMeshLayer3DRenderer *>( renderer )->setLayer( static_cast<QgsMeshLayer *>( layer ) );
     }
 
     Qt3DCore::QEntity *newEntity = renderer->createEntity( mMap );

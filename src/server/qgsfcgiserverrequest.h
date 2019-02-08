@@ -19,12 +19,9 @@
 #ifndef QGSFCGISERVERREQUEST_H
 #define QGSFCGISERVERREQUEST_H
 
-#define SIP_NO_FILE
-
 
 #include "qgsserverrequest.h"
 
-#include <QBuffer>
 
 /**
  * \ingroup server
@@ -53,7 +50,7 @@ class SERVER_EXPORT QgsFcgiServerRequest: public QgsServerRequest
 
 
     QByteArray mData;
-    bool       mHasError;
+    bool       mHasError = false;
 };
 
 #endif
